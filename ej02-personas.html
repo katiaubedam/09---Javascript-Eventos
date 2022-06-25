@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        #container {
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-family: sans-serif;
+        }
+
+        .card {
+            min-width: 300px;
+            max-width: 300px;
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            box-shadow: 10px 10px 8px #888;
+        }
+
+        #header {
+            display: flex;
+            justify-content: center;
+        }
+
+        input, button {
+            display: block;
+            margin: 10px;
+        }
+    </style>
+
+    <div id="header">
+        <input id="inputId" type="text" placeholder="Introduce el nombre de usuario">
+        <button id="buttonBuscar" type="button" onclick="buscar()">Buscar</button>
+    </div>
+
+    <div id="container">
+
+    </div>
+
+    <script src="paises.js"></script>
+    <script src="personas.js"></script>
+    <script>
+        
+        let misPersonas = []
+
+        for(const i in personas) {
+
+            let newPersona = {
+                name: `${personas[i].name.first} ${personas[i].name.last}`,
+                img: personas[i].picture.large,
+                age: personas[i].dob.age,
+                phone: personas[i].phone,
+                userName: personas[i].login.username,
+                country: personas[i].location.country
+            }
+
+            misPersonas.push(newPersona)
+        }
+
+        console.log(misPersonas)
+
+        function buscar() {
+
+            let name = document.getElementById("inputId").value
+            let personasFound = [] //Spanglish a tope :P
+
+            if (name) {
+                for (const i in misPersonas){
+                    if (misPersonas[i].name.toUpperCase().includes(name.toUpperCase())) {
+                        personasFound.push(misPersonas[i])
+                    }
+                }
+            } else {
+                personasFound = misPersonas
+            }
+            
+
+            document.getElementById("container").innerHTML = ""
+
+            if (personasFound.length > 0) {
+                for (let i = 0; i < personasFound.length; i++){
+
+                    let contenido = document.createElement('div')
+                    contenido.classList.add("card")
+
+                    contenido.innerHTML += `<h2>${personasFound[i].name}</h2>`
+                    contenido.innerHTML += `<img src="${personasFound[i].img}" alt="${personasFound[i].name}" style="width:100%">`
+                    contenido.innerHTML += `<p>Edad: ${personasFound[i].age}</p>`
+                    contenido.innerHTML += `<p>Teléfono: ${personasFound[i].phone}</p>`
+                    contenido.innerHTML += `<p>Nombre de usuario: ${personasFound[i].userName}</p>`
+                    contenido.innerHTML += `<p>País: ${personasFound[i].country}</p>`
+
+                    document.getElementById("container").appendChild(contenido)
+                }
+            } else {
+                let contenido = document.createElement('div')
+                contenido.classList.add("card")
+
+                contenido.innerHTML += "Ninguna persona encontrada"
+                document.getElementById("container").appendChild(contenido)
+            }
+            
+        }
+
+        
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        #container {
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-family: sans-serif;
+        }
+
+        .card {
+            min-width: 300px;
+            max-width: 300px;
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            box-shadow: 10px 10px 8px #888;
+        }
+
+        #header {
+            display: flex;
+            justify-content: center;
+        }
+
+        input, button {
+            display: block;
+            margin: 10px;
+        }
+    </style>
+
+    <div id="header">
+        <input id="inputPais1" type="text" placeholder="Introduce el país 1">
+        <input id="inputPais2" type="text" placeholder="Introduce el país 2">
+        <input id="inputPais3" type="text" placeholder="Introduce el país 3">
+        <button id="buttonBuscar" type="button" onclick="buscar()">Buscar</button>
+    </div>
+
+    <div id="container">
+
+    </div>
+
+    <script src="paises.js"></script>
+    <script src="personas.js"></script>
+    <script>
+        let paisesUser = []
+        const cantidadPaises = 3
+
+        let contenido = []
+
+        let encontrado = false
+        let repetido = false
+        let errorMsg = ""
+
+        function buscar(){
+
+            document.getElementById("container").innerHTML = ""
+            errorMsg = ""
+            encontrado = false
+            repetido = false
+
+            let paisesInput = [document.getElementById("inputPais1").value, document.getElementById("inputPais2").value, document.getElementById("inputPais3").value]
+
+            
+            for (let i = 0; i < cantidadPaises; i++) {
+
+                encontrado = false
+
+                for (let j = 0; j < paises.length; j++) {
+                    if (paises[j].pais === paisesInput[i]) {
+                        encontrado = true
+                        paisesUser[i] = paises[j]
+                        break
+                    }
+                }
+
+                if (!encontrado) {
+                    errorMsg += "País no encontrado."
+                    break
+                } else {
+                    contenido[i] = document.createElement('div')
+                    contenido[i].classList.add("card")
+                }
+            }
+
+            if (encontrado && (paisesInput[0] === paisesInput[1] || paisesInput[0] === paisesInput[2] || paisesInput[1] === paisesInput[2])) {
+                repetido = true
+                errorMsg += "País repetido."
+            }
+            
+
+            if (encontrado && !repetido) {
+
+                for (let i = 0; i < cantidadPaises; i++) {
+                    contenido[i].innerHTML += `<h1>${paisesUser[i].pais}</h1>`
+                    contenido[i].innerHTML += `<img src="${paisesUser[i].bandera}" alt="${paisesUser[i].pais}" style="width:100%">`
+                    contenido[i].innerHTML += `<p>Población: ${paisesUser[i].poblacion}</p>`
+                    contenido[i].innerHTML += `<p>Superficie: ${paisesUser[i].superficie}</p>`
+                    contenido[i].innerHTML += `<button type="button" onclick="cambiaColor('${paisesUser[i].color}', ${i})">Ver color del país</button>`
+
+                    document.getElementById("container").appendChild(contenido[i])
+                }
+
+            } else {
+                errorMsg += "\nPor favor, vuelve a intentarlo"
+                contenido[0] = document.createElement('div')
+                contenido[0].classList.add("card")
+                contenido[0].innerHTML = `<p>${errorMsg}</p>`
+                document.getElementById("container").appendChild(contenido[0])
+            }
+        }
+
+        function cambiaColor(color, index) {
+            contenido[index].style.backgroundColor = color
+        }
+    </script>
+</body>
+</html>
